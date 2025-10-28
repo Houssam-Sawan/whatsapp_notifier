@@ -5,6 +5,7 @@ frappe.ui.form.on('WhatsApp Bulk Notification', {
     refresh: function(frm) {
         if (frm.doc.company) {
             frm.add_custom_button(__('Get Late Paying Customers'), function() {
+				console.log("Fetching late paying customers...");
                 frappe.call({
                     method: 'whatsapp_notifier.whatsapp_notifier.doctype.whatsapp_bulk_notification.whatsapp_bulk_notification.get_late_paying_customers_details',
                     args: {
@@ -36,16 +37,43 @@ frappe.ui.form.on('WhatsApp Bulk Notification', {
     on_submit: function(frm) {
         (frm.doc.customers || []).forEach(row => {
             frappe.call({
-                method: 'whatsapp_notifier.app.send_message',
+                method: 'whatsapp_notifier.app.send_whatsapp',
                 args: {
-                    phone: row.mobile_number,
+                    to: row.mobile_number,
                     message: `Dear ${row.customer_name}, your credit limit is exceeded, Please clear it soon.
-                    Credit Limit: ${row.credit_limit}
-                    Outstanding Amount: ${row.outstanding_amount}
-                    Remaining Credit: ${row.remaining_credit}
-                    Thank you!`
+	Credit Limit: ${row.credit_limit}
+	Outstanding Amount: ${row.outstanding_amount}
+	Remaining Credit: ${row.remaining_credit}
+	Thank you!`
                 },
             });
         });
     }
 });
+
+
+frappe.ui.form.on('WhatsApp Bulk Notification', {
+    // 'your_button_fieldname' is the name of your button field in the DocType
+    get_customers(frm) {
+		    if (frm.doc.company) {
+				console.log("Fetching late paying customers...");
+                frappe.call({
+                    method: 'whatsapp_notifier.whatsapp_notifier.doctype.whatsapp_bulk_notification.whatsapp_bulk_notification.get_late_paying_customers_details',
+                    args: {
+                        company: frm.doc.company
+                    },
+                    callback: function(r) {
+								console.log(r.message);
+                        if (r.message) {
+                            frm.clear_table('customers');
+                            r.message.forEach(d => {
+                                let row = frm.add_child('customers', d);
+                            });
+                            frm.refresh_field('customers');
+                            frappe.msgprint(__('Customer list updated.'));
+                        }
+                    }
+                });
+        }
+
+	}});

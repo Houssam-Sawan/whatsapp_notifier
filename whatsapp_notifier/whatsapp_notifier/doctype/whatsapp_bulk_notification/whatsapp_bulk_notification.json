@@ -9,7 +9,6 @@
  "field_order": [
   "company",
   "get_customers",
-  "column_break_moiu7",
   "customers",
   "amended_from"
  ],
@@ -24,10 +23,6 @@
    "fieldname": "get_customers",
    "fieldtype": "Button",
    "label": "Get Late Paying Customers"
-  },
-  {
-   "fieldname": "column_break_moiu7",
-   "fieldtype": "Column Break"
   },
   {
    "fieldname": "customers",
@@ -49,7 +44,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-28 13:54:57.434218",
+ "modified": "2025-10-28 14:23:52.085251",
  "modified_by": "Administrator",
  "module": "Whatsapp Notifier",
  "name": "WhatsApp Bulk Notification",
